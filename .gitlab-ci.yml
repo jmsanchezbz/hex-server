@@ -1,0 +1,25 @@
+image: node:18.16.0
+
+stages:
+  - build
+  - release
+
+build:
+  stage: build
+  script:
+    - ./build_macos.sh
+  artifacts:
+    paths:
+      - "build/"
+release:
+  stage: release
+  image:
+    name: goreleaser/goreleaser
+    entrypoint: ['']
+  only:
+    - tags
+  variables:
+    GIT_DEPTH: 0
+    GITLAB_TOKEN: $CI_JOB_TOKEN
+  script:
+    - goreleaser release --clean --release-notes=README.md
