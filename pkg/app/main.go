@@ -3,12 +3,13 @@ package app
 import (
 	"embed"
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"io/fs"
+	"net"
 	"net/http"
 	"os/exec"
 	"runtime"
-	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 //go:embed dist
@@ -22,17 +23,29 @@ func Serve(addr string) {
 		http.FileServer(http.FS(subFS)).ServeHTTP(w, r)
 	})
 
-	logrus.Infof("You can access the HEX server at: %s", url)
+	ready := make(chan struct{})
+	logrus.Info("Starting HEX server")
 
 	// Start the Go HTTP server in a separate goroutine
 	go func() {
-		if err := http.ListenAndServe(addr, nil); err != nil {
+		// Start listening
+		l, err := net.Listen("tcp", addr)
+		if err != nil {
+			logrus.Fatalf("Failed to start server: %s", err)
+		}
+
+		// Signal readiness
+		ready <- struct{}{}
+
+		// Serve the static site
+		if err := http.Serve(l, nil); err != nil {
 			logrus.Fatalf("Failed to start server: %s", err)
 		}
 	}()
 
-	// Give the server a moment to start
-	time.Sleep(1 * time.Second)
+	// Wait for startup
+	<-ready
+	logrus.Infof("You can access the HEX server at: %s", url)
 
 	// Open the URL in the default browser
 	if err := openBrowser(url); err != nil {
