@@ -5,7 +5,7 @@ You're one step away from setting up your own instance of go.hex.com on your loc
 1. 📦 Use a Pre-built Binary: We offer pre-built binaries for various distributions, listed below.
 2. 🔧 Build from Source: If you prefer, you can clone this repository and compile your own binary.
 
-## Available Pre-built Binaries:
+## 📦 Available Pre-built Binaries:
 Downloads: https://gitlab.com/pulsechaincom/hex-server/-/releases
 
 | Package                             | Intel (amd64) | ARM (arm64) |
@@ -21,21 +21,21 @@ MacOS mandates the use of digitally signed binaries, which prevents us from dire
 
 🔹 Alternate Solution: We provide a `MacOS.zip` package. Upon installation, it sets up a lightweight webserver, enabling you to seamlessly run the website.
 
-🔹 For Advanced Users: If you wish to run the same binary as other operating systems, execute the following commands in your Terminal:
+🔹 For Advanced Users: If you wish to run the same binary as other operating systems, proceed below to build from source.
 
-#### Install dependencies
-```bash
-# Install go by either:
-# 1. Following instructions on https://go.dev/doc/install
-# 2. Install the following package manager (Homebrew https://brew.sh/) that can install go
+## 🔧 Building From Source 
 
-# The next two lines are for option 2.
-# If you have go installed or used option 1, you don't need the following lines. 
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-brew install go
-```
+### 1. Install Golang dependencies
+[Go 1.21](https://go.dev/doc/install) or newer is required to build the HEX server.
 
-#### Run after dependencies are installed
+Follow the official instructions on https://go.dev/doc/install to install Go for your OS.
+
+#### Alternatively, you can use a package manager to install Go:
+- MacOS users can use [Homebrew](https://brew.sh/) to install the [golang formula](https://formulae.brew.sh/formula/go).
+- Windows users can use [Chocolatey](https://community.chocolatey.org/) to install the [golang package](https://community.chocolatey.org/packages/golang).
+- Linux users can check the package manager for their distro of choice for available packages.
+
+### 2. Build the executable
 ```bash
 git clone https://gitlab.com/pulsechaincom/hex-server.git
 cd hex-server
@@ -44,4 +44,4 @@ go build -o hex-server ./cmd/hex-server/main.go
 # Run the built binary
 ./hex-server
 ```
-
+> **Note:** Windows users may want to add the `.exe` file extension to the output file name in the go build command above.
